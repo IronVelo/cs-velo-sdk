@@ -1,0 +1,75 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <LangVersion>11.0</LangVersion>
+        <Version>0.1.0</Version>
+        <Authors>IronVelo</Authors>
+        <Company>IronVelo Inc.</Company>
+        <Copyright>Copyright $([System.DateTime]::Now.Year) $(Company)</Copyright>
+        
+        <Title>IronVelo IdP SDK</Title>
+        
+        <Description>
+            The IronVelo C# SDK provides a robust and user-friendly interface for integrating with IronVelo's Identity
+            Provider (IdP), as well as utilities for secure programming.
+        </Description>
+        
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>IdentityProvider;SDK;IronVelo;Authentication</PackageTags>
+        <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
+
+        <RepositoryUrl>https://github.com/IronVelo/cs-velo-sdk.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageIcon>ironvelo_icon.png</PackageIcon>
+
+        <IsPackable>true</IsPackable>
+        <AssemblyName>IronVelo</AssemblyName>
+        <PackageId>IronVelo</PackageId>
+        <IncludeBuildOutput>true</IncludeBuildOutput>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <OutputType>Library</OutputType>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <!-- REQUIREMENTS FOR CONSTANT TIME IMPLEMENTATIONS -->
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <!-- IF THIS IS TRUE CONSTANT TIME PROPERTIES WILL BE VIOLATED -->
+        <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MustUse.Analyzer" Version="1.0.0" PrivateAssets="none"/>
+        <PackageReference Include="AffineTypes.Analyzer" Version="1.0.0" PrivateAssets="none"/>
+        <PackageReference Include="ResultAble" Version="1.0.0" PrivateAssets="none"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="README.md">
+            <Pack>true</Pack>
+            <PackagePath/>
+        </None>
+        <None Include="..\LICENSE-APACHE">
+            <Pack>true</Pack>
+            <PackagePath/>
+            <Link>LICENSE-APACHE</Link>
+        </None>
+        <None Include="..\LICENSE-MIT">
+            <Pack>true</Pack>
+            <PackagePath/>
+            <Link>LICENSE-MIT</Link>
+        </None>
+        <None Include="..\assets\ironvelo_icon.png">
+            <Pack>true</Pack>
+            <PackagePath/>
+        </None>
+    </ItemGroup>
+</Project>

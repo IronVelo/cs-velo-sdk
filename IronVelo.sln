@@ -1,0 +1,51 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronVelo", "IronVelo\IronVelo.csproj", "{7EECE554-F4EE-481E-9B9F-3571CAB75A93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronVelo.Benchmarks", "IronVelo.Benchmarks\IronVelo.Benchmarks.csproj", "{15C20226-6934-4E67-B7DB-360AD7B0D488}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronVelo.Tests", "IronVelo.Tests\IronVelo.Tests.csproj", "{182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResultAble", "ResultAble\ResultAble\ResultAble.csproj", "{3B9A847E-387F-4E31-8CB9-A669BD50858D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MustUse.Analyzer", "IronVelo.Analyzer\MustUse.Analyzer\MustUse.Analyzer.csproj", "{AB8BEC24-B858-437D-96CC-96389EA02B4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AffineTypes.Analyzer", "IronVelo.Analyzer\AffineTypes.Analyzer\AffineTypes.Analyzer.csproj", "{1C1F2167-550B-427A-BF29-048EBDFB39B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronVelo.Example", "IronVelo.Example\IronVelo.Example.csproj", "{78D8A831-EDC4-412B-AF1E-951A63D5450A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7EECE554-F4EE-481E-9B9F-3571CAB75A93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EECE554-F4EE-481E-9B9F-3571CAB75A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EECE554-F4EE-481E-9B9F-3571CAB75A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EECE554-F4EE-481E-9B9F-3571CAB75A93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15C20226-6934-4E67-B7DB-360AD7B0D488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15C20226-6934-4E67-B7DB-360AD7B0D488}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15C20226-6934-4E67-B7DB-360AD7B0D488}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15C20226-6934-4E67-B7DB-360AD7B0D488}.Release|Any CPU.Build.0 = Release|Any CPU
+		{182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B9A847E-387F-4E31-8CB9-A669BD50858D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B9A847E-387F-4E31-8CB9-A669BD50858D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B9A847E-387F-4E31-8CB9-A669BD50858D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B9A847E-387F-4E31-8CB9-A669BD50858D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB8BEC24-B858-437D-96CC-96389EA02B4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB8BEC24-B858-437D-96CC-96389EA02B4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB8BEC24-B858-437D-96CC-96389EA02B4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB8BEC24-B858-437D-96CC-96389EA02B4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C1F2167-550B-427A-BF29-048EBDFB39B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C1F2167-550B-427A-BF29-048EBDFB39B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C1F2167-550B-427A-BF29-048EBDFB39B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C1F2167-550B-427A-BF29-048EBDFB39B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78D8A831-EDC4-412B-AF1E-951A63D5450A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78D8A831-EDC4-412B-AF1E-951A63D5450A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78D8A831-EDC4-412B-AF1E-951A63D5450A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78D8A831-EDC4-412B-AF1E-951A63D5450A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,80 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>11.0</LangVersion>
+        <Version>1.0.0</Version>
+        <Authors>IronVelo</Authors>
+        <Company>IronVelo Inc.</Company>
+        <Copyright>Copyright $([System.DateTime]::Now.Year) $(Company)</Copyright>
+
+        <Title>Must Use Attribute</Title>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        
+        <Description>
+            This project introduces the `MustUse` attribute to C#. `MustUse` can be applied to types and methods to
+            encourage the usage of their return values. It helps prevent needless computation and ensures that the
+            caller handles the returned value appropriately, especially in cases where the return type represents a
+            result or an error that should be handled.
+        </Description>
+
+        <PackageTags>MustUse;C#;StaticAnalysis;ReturnValue;CompileTime</PackageTags>
+        
+        <IsPackable>true</IsPackable>
+        <Nullable>enable</Nullable>
+
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <IsRoslynComponent>true</IsRoslynComponent>
+        <PackageType>Analyzer</PackageType>
+
+        <RootNamespace>MustUse</RootNamespace>
+        <PackageId>MustUse.Analyzer</PackageId>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+        <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/IronVelo/cs-velo-sdk.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageIconUrl>ironvelo_icon.png</PackageIconUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.3.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Update="Resources.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Resources.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <AdditionalFiles Remove="AnalyzerReleases.Shipped.md" />
+        <None Update="README.md">
+            <Pack>true</Pack>
+            <PackagePath/>
+        </None>
+        <None Include="..\..\assets\ironvelo_icon.png">
+            <Pack>true</Pack>
+            <PackagePath/>
+        </None>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+</Project>

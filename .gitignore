@@ -1,0 +1,6 @@
+Dependencies/
+obj/
+bin/
+*Artifacts/
+LocalNugetFeed
+NuGet.config

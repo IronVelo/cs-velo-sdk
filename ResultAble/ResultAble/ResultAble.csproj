@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Version>1.0.0</Version>
+        <Authors>IronVelo</Authors>
+        <Company>IronVelo Inc.</Company>
+        <Copyright>Copyright $([System.DateTime]::Now.Year) $(Company)</Copyright>
+
+        <Title>ResultAble Utility for IronVelo's IdP SDK</Title>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        
+        <Description>
+            A utility used internally by the IronVelo package for handling results from the IdP in a type-safe manner.
+        </Description>
+        
+        <PackageTags>ResultAble;SourceGenerator;C#</PackageTags>
+
+        <IsPackable>true</IsPackable>
+        <IsRoslynComponent>true</IsRoslynComponent>
+        <IncludeBuildOutput>true</IncludeBuildOutput>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <RootNamespace>ResultAble</RootNamespace>
+        <PackageId>ResultAble</PackageId>
+        <AssemblyName>ResultAble</AssemblyName>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        
+        <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/IronVelo/cs-velo-sdk.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageIcon>ironvelo_icon.png</PackageIcon>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.3.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.3.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Remove="AnalyzerReleases.Shipped.md" />
+        <None Update="README.md">
+            <Pack>true</Pack>
+            <PackagePath/>
+        </None>
+        <None Include="..\..\assets\ironvelo_icon.png">
+            <Pack>true</Pack>
+            <PackagePath/>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+</Project>

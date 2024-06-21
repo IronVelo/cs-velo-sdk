@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Version>0.0.1</Version>
+        <Authors>IronVelo</Authors>
+        <Company>IronVelo Inc.</Company>
+        <Title>An Example Server with IronVelo's SDK</Title>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/IronVelo/cs-velo-sdk.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="IronVelo" Version="0.1.0"/>
+        <PackageReference Include="MustUse.Analyzer" Version="1.0.0"/>
+    </ItemGroup>
+</Project>
