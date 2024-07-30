@@ -16,12 +16,13 @@ internal record HelloLoginTlArgs(
     HelloLoginArgs HelloLogin
 );
 
-[Result]
 internal partial record HelloRes
 (
-    [property: Ok, JsonProperty("hello_login", NullValueHandling = NullValueHandling.Ignore)]
-    MfaKind[] MfaKinds,
-    [property: Error, JsonProperty("failure", NullValueHandling = NullValueHandling.Ignore)]
+    [property: JsonProperty("hello_login", NullValueHandling = NullValueHandling.Ignore)]
+    MfaKind[]? MfaKinds,
+    [property: JsonProperty("issue_token", NullValueHandling = NullValueHandling.Ignore)]
+    string Token,
+    [property: JsonProperty("failure", NullValueHandling = NullValueHandling.Ignore)]
     LoginError LoginError
 );
 
@@ -49,18 +50,29 @@ public record HelloLogin
     /// There was an unexpected error encountered when making the request, see <see cref="Exceptions.RequestErrorKind"/>
     /// for more information
     /// </exception> 
-    public FutResult<InitMfa, LoginError> Start(string username, Password password)
+    public FutResult<Either<InitMfa, Token>, LoginError> Start(string username, Password password)
     {
-        return FutResult<InitMfa, LoginError>.From(_client.SendRequest<HelloLoginTlArgs, HelloRes>(
+        return FutResult<Either<InitMfa, Token>, LoginError>.From(_client.SendRequest<HelloLoginTlArgs, HelloRes>(
             new HelloLoginTlArgs(new HelloLoginArgs(username, password.ToString()))
         ).ContinueWith(task => { 
             var res = Resolve.Get(task);
-            return res
-                .UnwrapRet()
-                .ToResult()
-                .Map(val => new InitMfa(_client, res.Permit, val));
-            })
-        );
+            if (res.Ret is {} ret) {
+                if (ret.Token is {} token) {
+                    return Result<Either<InitMfa, Token>, LoginError>.Success(Either<InitMfa, Token>.Right(new Token(token)));
+                } 
+                if (ret.MfaKinds is {} kinds) {
+                    return Result<Either<InitMfa, Token>, LoginError>.Success(
+                        Either<InitMfa, Token>.Left(new InitMfa(_client, res.Permit, kinds))
+                    );
+                }
+                if (ret.LoginError is var err) {
+                    return Result<Either<InitMfa, Token>, LoginError>.Failure(err);
+                }
+                throw Exceptions.RequestError.Deserialization();
+            } else {
+                throw Exceptions.RequestError.Deserialization();
+            }
+        }));
     }
     
     /// <summary>
@@ -141,7 +153,7 @@ internal record InitMfaArgs([property: JsonProperty("kind")] MfaKind InitMfa);
 
 internal class InitMfaTlArgs
 {
-    [JsonProperty("init_mfa", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonProperty("init_mfa", NullValueHandling = NullValueHandling.Include)]
     public InitMfaArgs? InitMfa { get; }
 
     [JsonProperty("retry_init_mfa", NullValueHandling = NullValueHandling.Ignore)]

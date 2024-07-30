@@ -154,3 +154,13 @@ public class Base64Error : Exception
 
     internal static Base64Error InvalidEncoding => new("Invalid encoding detected.");
 }
+
+/// <summary>
+/// Error returned when invoking <see cref="VeloSdkBuilder.Build"/> without setting the host.
+/// </summary>
+public class RequiresHost : Exception
+{
+    internal RequiresHost() : base("Invoked `VeloSdkBuilder.Build()` without providing required field `WithHost()`")
+    {
+    }
+}

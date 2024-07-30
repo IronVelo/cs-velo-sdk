@@ -43,7 +43,7 @@ public class Examples
             // Attempt to initiate the flow with username and password
             .Start(Username, Pass).MapErr(err => err.ToString())
             // Select the MfaKind the user would like to use (available kinds are accessible from the state)
-            .BindFut(s => s.Totp().MapErr(selectAgain => selectAgain.Serialize(/* user did not set TOTP up */)))
+            .BindFut(s => s.LeftV!.Totp().MapErr(selectAgain => selectAgain.Serialize(/* user did not set TOTP up */)))
             .BindFut(s => s.Guess(Guess).MapErr(selectAgain => selectAgain.Serialize(/* wrong! */)))
             // If any of the states failed, throw
             .Unwrap();

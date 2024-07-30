@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
@@ -28,8 +28,10 @@
     <ItemGroup>
     </ItemGroup>
 
-    <ItemGroup>
+    <!--<ItemGroup>
         <PackageReference Include="IronVelo" Version="0.1.0"/>
-    </ItemGroup>
+    </ItemGroup>-->
+    <ItemGroup><ProjectReference Include="../IronVelo/IronVelo.csproj"/> </ItemGroup>
+    
 
 </Project>

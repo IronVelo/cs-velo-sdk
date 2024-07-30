@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using System.Web;
 using IronVelo.Flows;
 using IronVelo.Types;
@@ -53,9 +54,14 @@ public class Integration
     {
         _output = output;
         var httpClientHandler = new HttpClientHandler();
-        httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
 
-        _sdk = new VeloSdk("127.0.0.1", 3069, new HttpClient(httpClientHandler));
+        httpClientHandler.ClientCertificates.Add(
+            new X509Certificate2(
+                "/home/almighty/Repos/velo/idp_template/.test_creds/ssl/unsafe-dev-certificate.der"
+            )
+        );
+
+        _sdk = new VeloSdk("bp.unsafe-dev.ironvelo.com", 26727, new HttpClient(httpClientHandler));
         _totp = null;
     }
     private readonly ITestOutputHelper _output;
@@ -106,7 +112,7 @@ public class Integration
         }
 
         var totp = _sdk.Login().Start(Username, Password.From(BobsPassword).Unwrap()).Unwrap().Result
-            .Totp().Unwrap().Result
+            .LeftV!.Totp().Unwrap().Result
             .Guess(_totp.Gen())
             .Result;
 
@@ -290,7 +296,7 @@ public class Integration
         // bob has returned and he would like to log in
         var state = _sdk.Login().Start(Username, Password.From(BobsPassword).Unwrap())
             .Unwrap()
-            .Result
+            .Result.LeftV!
             .Serialize();
         
         // Bob only likes TOTP, and it also is all that he has previously set up. He communicates to the IdP that he 

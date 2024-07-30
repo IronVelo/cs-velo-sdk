@@ -17,6 +17,11 @@
     &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.MigrateBob&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0f8df0b4_002Da119_002D4d0c_002D81bd_002Da1ff56125b0d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="MultiPartLoginBobTest #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net8.0::IronVelo.Tests.Integration.MultiPartLoginBobTest&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
 	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=1864992f_002Dee0d_002D4ef7_002D997b_002D3a51b957c2bc/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CatchesInvalidOnDecode" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
@@ -68,34 +73,26 @@
     &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.MigrateBob&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b526f908_002D0166_002D44c2_002Dab51_002Dc8a332c0c6d7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="OtpRefined" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=a042e133_002De3c4_002D4868_002Dbca3_002D217ee422e8b0/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="MultiPartLoginBobTest #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.OtpRefined&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.PasswordRefined&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Base64Tests&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.LoginBobSmoke&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.LoginBobTest&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.MigrateBob&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.MultiPartSignupBobTest&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.MultiPartLoginBobTest&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.MultiPartMigrateLoginBobTest&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net8.0::IronVelo.Tests.Integration.MultiPartLoginBobTest&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fb97b9c9_002Dd5f7_002D424e_002D97c7_002Dfc597e3cfcf4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CheckAgainstBuiltin" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b526f908_002D0166_002D44c2_002Dab51_002Dc8a332c0c6d7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="OtpRefined" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Base64Tests.CheckAgainstBuiltin&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Base64Tests.CatchesInvalidOnDecode&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Base64Tests.EncodeDecodeIsBijective&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Base64Tests.Basic&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Refined.EnsureNumericSmoke&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Base64Tests.EncodePaddedCtAgainstBuiltin&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Base64Tests.EncodedPaddedSmoke&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.LoginBobSmoke&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.MultiPartSignupBobTest&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.MultiPartLoginBobTest&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.LoginBobTest&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.MigrateBob&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::IronVelo.Tests.Integration.MultiPartMigrateLoginBobTest&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net7.0::ResultGenTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net8.0::IronVelo.Tests.Integration&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ea0f708b_002D9c21_002D4ce5_002D83d2_002Dbc3d7b44ee21/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="MultiPartLoginBobTest #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net8.0::IronVelo.Tests.Integration.MultiPartLoginBobTest&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fb97b9c9_002Dd5f7_002D424e_002D97c7_002Dfc597e3cfcf4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CheckAgainstBuiltin" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net8.0::IronVelo.Tests.Integration.MultiPartSignupBobTest&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net8.0::IronVelo.Tests.Integration.MultiPartMigrateLoginBobTest&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net8.0::IronVelo.Tests.Integration.MigrateBob&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::182CC9D2-83EC-4FA0-82CC-95E3FCD2CB4B::net8.0::IronVelo.Tests.Integration.LoginBobTest&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

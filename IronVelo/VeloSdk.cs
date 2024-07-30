@@ -70,6 +70,91 @@ internal record H2Client
 }
 
 /// <summary>
+/// Builder class for creating instances of <see cref="VeloSdk"/> with more granular configurations.
+/// </summary>
+public class VeloSdkBuilder
+{
+    // Connection details
+    private int _port = 443;
+    private string? _host = null;
+    private HttpClient? _h2_client = null;
+
+    // Flags. Enforced by IdP. It would be best to do this as an analyzer in the future.
+    private bool _mfa_required = true;
+
+    /// <summary>
+    /// Initializes a new instance of the VeloSdkBuilder class.
+    /// </summary>
+    public VeloSdkBuilder() {}
+
+    /// <summary>
+    /// Sets the port for the VeloSdk connection. If not set this defaults to <c>443</c>.
+    /// </summary>
+    /// <param name="port">The port number to use for the connection.</param>
+    /// <returns>The current VeloSdkBuilder instance for method chaining.</returns>
+    public VeloSdkBuilder WithPort(int port) 
+    {
+        _port = port;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the host for the VeloSdk connection. This is a required field and must be set to invoke 
+    /// <see cref="VeloSdkBuilder.Build">.
+    /// </summary>
+    /// <param name="host">The host address to connect to.</param>
+    /// <returns>The current VeloSdkBuilder instance for method chaining.</returns>
+    public VeloSdkBuilder WithHost(string host)
+    {
+        _host = host;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets a custom HttpClient for the VeloSdk to use.
+    /// </summary>
+    /// <param name="h2Client">The HttpClient instance to use for HTTP/2 connections.</param>
+    /// <returns>The current VeloSdkBuilder instance for method chaining.</returns>
+    public VeloSdkBuilder WithClient(HttpClient h2Client) 
+    {
+        _h2_client = h2Client;
+        return this;
+    }
+
+    /// <summary>
+    /// Configures the VeloSdk to use optional Multi-Factor Authentication (MFA). This must correspond with the IdP
+    /// itself. The SDK has no control over functionality regarding security. 
+    /// </summary>
+    /// <remarks>
+    /// This is a no-op. Currently it has no impact. In the future it will be used by an analyzer to ensure the SDK
+    /// is used properly. This is included so that this update will not be a breaking change. 
+    /// </remarks>
+    /// <returns>The current VeloSdkBuilder instance for method chaining.</returns>
+    public VeloSdkBuilder WithOptionalMfa() 
+    {
+        _mfa_required = false;
+        return this;
+    }
+
+    /// <summary>
+    /// Builds and returns a <see cref="VeloSdk"/> instance based on the configured parameters.
+    /// </summary>
+    /// <returns>
+    /// A Result containing either a successfully built VeloSdk instance or a RequiresHost exception if the host was 
+    /// not set.
+    /// </returns>
+    public Result<VeloSdk, Exceptions.RequiresHost> Build()
+    {
+        if (_host is { } host) {
+            var sdk = new VeloSdk(host, _port, _h2_client);
+            return Result<VeloSdk, Exceptions.RequiresHost>.Success(sdk);
+        } else {
+            return Result<VeloSdk, Exceptions.RequiresHost>.Failure(new Exceptions.RequiresHost());
+        }
+    }
+}
+
+/// <summary>
 /// The main entry point for interacting with IronVelo's Identity Provider (IdP).
 /// </summary>
 public class VeloSdk
@@ -86,7 +171,12 @@ public class VeloSdk
     {
         _client = new H2Client(host, port, httpClient);
     }
-    
+
+    public static VeloSdkBuilder Builder()
+    {
+        return new VeloSdkBuilder();
+    }
+
     private readonly H2Client _client;
     
     /// <summary>

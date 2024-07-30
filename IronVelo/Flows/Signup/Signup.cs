@@ -184,6 +184,8 @@ public record SetPassword : IState<SignupState>
     }
 }
 
+internal record NoMfaRes([property: JsonProperty("issue_token")] string Token);
+
 /// <summary>
 /// State for setting up the user's first MFA method
 /// </summary>
@@ -198,6 +200,19 @@ public record SetupMfa : SetupMfaBase<VerifyTotpSetup, VerifyMfaSetup, SignupSta
     /// <inheritdoc />
     protected override VerifyTotpSetup TotpValidator(FlowClient c, string? p, string pUri, List<MfaKind> ps)
         => new(c, p, pUri, ps);
+
+    /// <summary>
+    /// Set an account up without any MFA. We strongly recommend not using this feature, and this feature is not ever
+    /// controlled by the SDK, it is enforced via the IdP itself. Simply using this API without setting up your 
+    /// IdP to handle this will yield errors. That is why this branch is not published to nuget, we simply do not 
+    /// recommend ever using it under any circumstance. It also improves the cognitive complexity of our SDK, 
+    /// violating the correct by construction properties we shot for. 
+    /// </summary>
+    public async Task<Token> NoMfa()
+    {
+        var ret = await MakeRequest<NoMfaRes>(new SetupMfaKind.Null(StateIdent));
+        return new Token(ret.Ret.Token);
+    }
 }
 
 /// <summary>
