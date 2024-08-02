@@ -7,7 +7,7 @@ public record SignupResponse(
     SignupState? State,
     SignupState? ErrState,
     string? ErrMsg,
-    string? Token
+    string? Secret
 );
 
 public static class SignupResHelpers
@@ -19,4 +19,7 @@ public static class SignupResHelpers
     public static SignupResponse Success<TS>(TS state) where TS : IState<SignupState> 
         => new(state.GetState(), null, null, null);
     public static SignupResponse Token(Token token) => new(null, null, null, token.Encode());
+    public static SignupResponse PUri(Flows.Signup.VerifyTotpSetup state) => new(
+        state.GetState(), null, null, state.ProvisioningUri
+    );
 }

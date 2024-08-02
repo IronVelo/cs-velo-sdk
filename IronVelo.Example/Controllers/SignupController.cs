@@ -136,7 +136,7 @@ public class SignupController : ControllerBase
         {
             MfaKind.Email => ResOkState(await state.Email(contact!)),
             MfaKind.Sms => ResOkState(await state.Sms(contact!)),
-            MfaKind.Totp => ResOkState(await state.Totp()),
+            MfaKind.Totp => Ok(PUri(await state.Totp())),
             _ => throw new Exception("Impossibility! MFA Kinds are exhaustive!")
         };
     }
