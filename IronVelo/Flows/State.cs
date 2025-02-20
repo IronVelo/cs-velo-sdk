@@ -63,10 +63,13 @@ public enum SignupStateE
 }
 
 /// <summary>
-/// Serializable representation of a signup state, enabling multistep flows without needing to track state yourself.
+/// Serializable representation of a signup state, enabling multistep flows without needing to track 
+/// state yourself.
 /// </summary>
-/// <param name="State">Indicates the state to <see cref="Signup.HelloSignup.Resume"/> for continuing the process.</param>
-/// <param name="Permit">Secure representation of the future state, used by the IdP and SDK. One should ignore this.</param>
+/// <param name="State">Indicates the state to <see cref="Signup.HelloSignup.Resume"/> for continuing 
+/// the process.</param>
+/// <param name="Permit">Secure representation of the future state, used by the IdP and SDK. One should 
+/// ignore this.</param>
 /// <param name="AlreadySetup">The MFA kinds the user has already setup in this signup flow.</param>
 /// <param name="Current">
 /// If the previous state was the initiation of MFA verification. This will be non-null if the <c>State</c> property is
@@ -95,14 +98,17 @@ public enum DeleteStateE
 }
 
 /// <summary>
-/// Serializable representation of an account deletion state, enabling multistep flows without needing to track state
-/// yourself.
+/// Serializable representation of an account deletion state, enabling multistep flows without 
+/// needing to track state yourself.
 /// </summary>
-/// <param name="State">Indicates the state to <see cref="Delete.AskDelete.Resume"/> for continuing the process.</param>
-/// <param name="Permit">Secure representation of the future state, used by the IdP and SDK. One should ignore this.</param>
+/// <param name="State">Indicates the state to <see cref="Delete.AskDelete.Resume"/> for continuing the 
+/// process.</param>
+/// <param name="Permit">Secure representation of the future state, used by the IdP and SDK. One should 
+/// ignore this.</param>
 /// <param name="Token">
-/// The token associated with the user's login state. When providing on <see cref="Delete.AskDelete.Resume"/> this must
-/// be valid for use. Otherwise, the state will throw an error.
+/// The token associated with the user's login state. When providing on 
+/// <see cref="Delete.AskDelete.Resume"/> this must be valid for use. Otherwise, the state will throw 
+/// an error.
 /// </param>
 public record DeleteState
 (
@@ -135,19 +141,92 @@ public enum MigrateLoginStateE
 }
 
 /// <summary>
-/// Serializable representation of a migrating login state, enabling multistep flows without needing to track state
-/// yourself.
+/// Serializable representation of a migrating login state, enabling multistep flows without needing 
+/// to track state yourself.
 /// </summary>
-/// <param name="State">Indicates the state to <see cref="MigrateLogin.HelloLogin.Resume"/> for continuing the process.</param>
-/// <param name="Permit">Secure representation of the future state, used by the IdP and SDK. One should ignore this.</param>
-/// <param name="AlreadySetup">The MFA kinds the user has already setup in this migrating login flow.</param>
+/// <param name="State">Indicates the state to <see cref="MigrateLogin.HelloLogin.Resume"/> for 
+/// continuing the process.</param>
+/// <param name="Permit">Secure representation of the future state, used by the IdP and SDK. One 
+/// should ignore this.</param>
+/// <param name="AlreadySetup">The MFA kinds the user has already setup in this migrating login 
+/// flow.</param>
 /// <param name="Current">
-/// If the previous state was the initiation of MFA verification. This will be non-null if the <c>State</c> property is
-/// either <c>VerifyOtpSetup</c> or <c>VerifyTotpSetup</c>.
+/// If the previous state was the initiation of MFA verification. This will be non-null if the 
+/// <c>State</c> property is either <c>VerifyOtpSetup</c> or <c>VerifyTotpSetup</c>.
 /// </param>
 public record MigrateLoginState(
     MigrateLoginStateE State,
     string Permit,
     List<MfaKind> AlreadySetup,
     MfaKind? Current
+);
+
+/// <summary>
+/// Represents a state enumeration for the MFA update flow, tracking the current stage
+/// of the update process.
+///
+/// Denotes the state to transition to in <see cref="Flows.MigrateLogin.ResumeLoginState"/>. 
+/// </summary>
+/// <remarks>
+/// The states follow this progression:
+/// <list type="number">
+///   <item><description>StartUpdate - Initial state when beginning the update</description></item>
+///   <item><description>CheckOtp/CheckTotp - Verification of existing MFA</description></item>
+///   <item><description>Decide - Choosing what changes to make</description></item>
+///   <item><description>EnsureOtpSetup/EnsureTotpSetup - Setting up new MFA method</description></item>
+///   <item><description>FinalizeUpdate/FinalizeRemoval - Confirming changes</description></item>
+/// </list>
+/// </remarks>
+public enum UpdateMfaStateE
+{
+    /// <summary>
+    /// On resume, invoke <see cref="Flows.UpdateMfa.ResumeUpdateState.InitMfaCheck"/>.
+    /// </summary>
+    StartUpdate,
+    /// <summary>
+    /// On resume, invoke <see cref="Flows.UpdateMfa.ResumeUpdateState.CheckOtp"/>.
+    /// </summary>
+    CheckOtp,
+    /// <summary>
+    /// On resume, invoke <see cref="Flows.UpdateMfa.ResumeUpdateState.CheckTotp"/>.
+    /// </summary>
+    CheckTotp,
+    /// <summary>
+    /// On resume, invoke <see cref="Flows.UpdateMfa.ResumeUpdateState.DecideUpdate"/>.
+    /// </summary>
+    Decide,
+    /// <summary>
+    /// On resume, invoke <see cref="Flows.UpdateMfa.ResumeUpdateState.FinalizeRemoval"/>.
+    /// </summary>
+    FinalizeRemoval,
+    /// <summary>
+    /// On resume, invoke <see cref="Flows.UpdateMfa.ResumeUpdateState.EnsureOtp"/>.
+    /// </summary>
+    EnsureOtpSetup,
+    /// <summary>
+    /// On resume, invoke <see cref="Flows.UpdateMfa.ResumeUpdateState.EnsureTotp"/>.
+    /// </summary>
+    EnsureTotpSetup,
+    /// <summary>
+    /// On resume, invoke <see cref="Flows.UpdateMfa.ResumeUpdateState.FinalizeUpdate"/>.
+    /// </summary>
+    FinalizeUpdate
+}
+
+/// <summary>
+/// Represents the current progress in the MFA update flow. This is used when resuming
+/// a previously started update process.
+/// </summary>
+/// <remarks>
+/// The state contains:
+/// <list type="bullet">
+///   <item><description>Current stage of the MFA update process</description></item>
+///   <item><description>Authentication permit for the flow</description></item>
+///   <item><description>List of configured MFA methods</description></item>
+/// </list>
+/// </remarks>
+public record UpdateMfaState(
+    UpdateMfaStateE State,
+    string Permit,
+    MfaKind[] OldMfa
 );

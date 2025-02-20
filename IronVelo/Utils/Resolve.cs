@@ -13,9 +13,10 @@ public static class Resolve
     /// <returns><c>TR</c>, the value which the <see cref="Task{TResult}"/> resolves into.</returns>
     /// <exception cref="AggregateException">
     /// The task was canceled. The <see cref="AggregateException.InnerExceptions"/> collection contains a
-    /// <see cref="TaskCanceledException"/> object. -or- An exception was thrown during the execution of the task.
-    /// The <see cref="AggregateException.InnerExceptions"/> collection contains information about the exception or
-    /// exceptions.
+    /// <see cref="TaskCanceledException"/> object. -or- An exception was thrown during the execution 
+    /// of the task.
+    /// The <see cref="AggregateException.InnerExceptions"/> collection contains information about the 
+    /// exception or exceptions.
     /// </exception>
     /// <exception cref="OperationCanceledException">The task was cancelled.</exception>
     public static TR Get<TR>(Task<TR> task) =>
@@ -25,8 +26,9 @@ public static class Resolve
                 ? throw task.Exception!
                 : task.IsCanceled
                     ? throw new OperationCanceledException("Task was canceled.")
-                    // Non-documented as should be impossible. Should undergo further review to ensure that is accurate
-                    // as we could reduce a branch. Though, in this circumstance, performance isn't too much of a 
-                    // concern. Hot path is prioritized in this function.
+                    // Non-documented as should be impossible. Should undergo further review to 
+                    // ensure that is accurate as we could reduce a branch. Though, in this 
+                    // circumstance, performance isn't too much of a concern. Hot path is prioritized 
+                    // in this function.
                     : throw new InvalidOperationException("Task is not completed.");
 }

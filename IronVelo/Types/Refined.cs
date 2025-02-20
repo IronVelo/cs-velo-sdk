@@ -26,8 +26,8 @@ public static class MfaParser
     /// </summary>
     /// <param name="raw">The raw MFA kind to attempt to parse.</param>
     /// <returns>
-    /// A successful <see cref="Result{T,TE}"/> if the provided raw <see cref="Flows.MfaKind"/> was valid, an
-    /// <see cref="UnknownMfaKind"/> otherwise.
+    /// A successful <see cref="Result{T,TE}"/> if the provided raw 
+    /// <see cref="Flows.MfaKind"/> was valid, an <see cref="UnknownMfaKind"/> otherwise.
     /// </returns>
     public static Result<Flows.MfaKind, UnknownMfaKind> From(string raw)
     {
@@ -72,7 +72,8 @@ public enum InvalidOtpKind
 /// </summary>
 /// <param name="Kind">Describes the reason for the OTP being invalid.</param>
 /// <param name="LengthError">
-/// If the OTP kind was <see cref="InvalidOtpKind.InvalidLength"/>, the expected and actual length of the provided OTP.
+/// If the OTP kind was <see cref="InvalidOtpKind.InvalidLength"/>, the expected and actual length of 
+/// the provided OTP.
 /// </param>
 public record InvalidOtp(InvalidOtpKind Kind, InvalidLength? LengthError = null)
 {
@@ -136,7 +137,8 @@ public record SimpleOtp : OtpValidator<SimpleOtp>
     /// </summary>
     /// <param name="otp">The raw OTP to validate.</param>
     /// <returns>
-    /// A successful <see cref="Result{T,TE}"/> if the OTP is potentially valid, an error otherwise with the reason.
+    /// A successful <see cref="Result{T,TE}"/> if the OTP is potentially valid, an error otherwise 
+    /// with the reason.
     /// </returns>
     public static Result<SimpleOtp, InvalidOtp> From(string otp)
     {
@@ -172,7 +174,8 @@ public record Totp : OtpValidator<Totp>
     /// </summary>
     /// <param name="totp">The raw TOTP to validate.</param>
     /// <returns>
-    /// A successful <see cref="Result{T,TE}"/> if the TOTP is potentially valid, an error otherwise with the reason.
+    /// A successful <see cref="Result{T,TE}"/> if the TOTP is potentially valid, an error otherwise 
+    /// with the reason.
     /// </returns>
     public static Result<Totp, InvalidOtp> From(string totp)
     {
@@ -291,13 +294,14 @@ public class Password
     /// </item><item>
     /// <description>Be no more than 72 characters long</description>
     /// </item><item><description>
-    /// Contain only legal characters (uppercase letters, lowercase letters, digits, and special characters)
+    /// Contain only legal characters (uppercase letters, lowercase letters, digits, and special 
+    /// characters)
     /// </description></item><item>
     /// <description>Contain at least one uppercase letter</description>
     /// </item><item>
     /// <description>Contain at least one lowercase letter</description>
     /// </item><item>
-    /// <description>Contain at least one numeric digit</description>
+    /// <description>Contain at least one number</description>
     /// </item><item>
     /// <description>Contain at least one special character</description>
     /// </item></list>
@@ -351,7 +355,9 @@ public class Password
         );
         
         return !hasSpecial 
-            ? Result<Password, PasswordInvalid>.Failure(new PasswordInvalid(PasswordInvalidKind.NeedsSpecial)) 
+            ? Result<Password, PasswordInvalid>.Failure(
+                new PasswordInvalid(PasswordInvalidKind.NeedsSpecial)
+            ) 
             : Result<Password, PasswordInvalid>.Success(new Password(password));
     }
 

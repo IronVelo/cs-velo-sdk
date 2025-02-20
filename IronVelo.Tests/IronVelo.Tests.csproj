@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
         <IsPackable>false</IsPackable>
+        <DefaultItemExcludes>$(DefaultItemExcludes);**/*~;**/#*#;**/.#*</DefaultItemExcludes>
     </PropertyGroup>
 
     <ItemGroup>
@@ -26,10 +27,11 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\IronVelo\IronVelo.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="IronVelo" Version="0.1.0"/>
+        <!-- PackageReference Include="IronVelo" Version="0.1.0"/> -->
     </ItemGroup>
 
 </Project>

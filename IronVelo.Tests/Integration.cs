@@ -19,8 +19,18 @@ public class TotpGen
         var period = int.Parse(query["period"] ?? "30");
 		
         var secretBytes = OtpNet.Base32Encoding.ToBytes(secretBase32);
-        var totp = new OtpNet.Totp(secretBytes, mode: OtpNet.OtpHashMode.Sha256, totpSize: digits, step: period);
+        var totp = new OtpNet.Totp(
+            secretBytes, 
+            mode: OtpNet.OtpHashMode.Sha256, 
+            totpSize: digits, 
+            step: period
+        );
 
+        TotpInner = totp;
+    }
+    
+    public TotpGen(OtpNet.Totp totp)
+    {
         TotpInner = totp;
     }
 
@@ -46,21 +56,33 @@ public class TestEnv : IDisposable
     }
 }
 
+public class Helpers {
+    public static VeloSdk GetSdk(int port = 4069)
+    {
+        var httpClientHandler = new HttpClientHandler();
 
+        httpClientHandler
+            .ServerCertificateCustomValidationCallback = HttpClientHandler
+            .DangerousAcceptAnyServerCertificateValidator;
+
+        return new VeloSdk("127.0.0.1", port, new HttpClient(httpClientHandler));
+    }
+    
+    public const string Password = "Password1234!";
+}
+
+[Collection("Serial")]
 public class Integration
 {
     public Integration(ITestOutputHelper output)
     {
         _output = output;
-        var httpClientHandler = new HttpClientHandler();
-        httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-
-        _sdk = new VeloSdk("127.0.0.1", 3069, new HttpClient(httpClientHandler));
+        _sdk = Helpers.GetSdk();
         _totp = null;
     }
     private readonly ITestOutputHelper _output;
 
-    private const string Username = "bob123";
+    private const string Username = "bob123456";
     private const string BobsPassword = "Password1234!";
     private readonly VeloSdk _sdk;
     private TotpGen? _totp;
@@ -92,12 +114,12 @@ public class Integration
         {
             throw new NullException("Token cannot be null for deletion");
         }
-
+        
         var _ =_sdk.DeleteUser().Delete(_token, Username).Unwrap().Result
             .CheckPassword(Password.From(BobsPassword).Unwrap()).Unwrap().Result
             .Confirm().Result;
     }
-
+    
     private void LoginBob()
     {
         if (_totp == null)

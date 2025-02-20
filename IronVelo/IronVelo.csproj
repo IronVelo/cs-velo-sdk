@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <LangVersion>11.0</LangVersion>
-        <Version>0.1.0</Version>
+        <Version>0.2.0</Version>
         <Authors>IronVelo</Authors>
         <Company>IronVelo Inc.</Company>
         <Copyright>Copyright $([System.DateTime]::Now.Year) $(Company)</Copyright>
@@ -40,6 +40,8 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <!-- IF THIS IS TRUE CONSTANT TIME PROPERTIES WILL BE VIOLATED -->
         <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+
+        <DefaultItemExcludes>$(DefaultItemExcludes);**/*~;**/#*#;**/.#*</DefaultItemExcludes>
     </PropertyGroup>
 
     <ItemGroup>

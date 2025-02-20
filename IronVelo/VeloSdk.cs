@@ -15,6 +15,7 @@ internal enum RouteType
     Health = 4,
     Delete = 5,
     MigrateLogin = 6,
+    UpdateMfa = 7,
 }
 
 internal record H2Client
@@ -26,13 +27,14 @@ internal record H2Client
         HttpConnection = httpClient ?? new HttpClient();
         Routes = new[]
         {
-            "https://" + host + ":" + port + "/signup", // (int)RouteType.Signup
-            "https://" + host + ":" + port + "/login", // (int)RouteType.Login
+            "https://" + host + ":" + port + "/signup",  // (int)RouteType.Signup
+            "https://" + host + ":" + port + "/login",   // (int)RouteType.Login
             "https://" + host + ":" + port + "/refresh", // (int)RouteType.Refresh 
-            "https://" + host + ":" + port + "/revoke", // (int)RouteType.Revoke
-            "https://" + host + ":" + port + "/health", // (int)RouteType.Health
-            "https://" + host + ":" + port + "/delete", // (int)RouteType.Delete
-            "https://" + host + ":" + port + "/mLogin" // (int)RouteType.MigrateLogin
+            "https://" + host + ":" + port + "/revoke",  // (int)RouteType.Revoke
+            "https://" + host + ":" + port + "/health",  // (int)RouteType.Health
+            "https://" + host + ":" + port + "/delete",  // (int)RouteType.Delete
+            "https://" + host + ":" + port + "/mLogin",  // (int)RouteType.MigrateLogin
+            "https://" + host + ":" + port + "/upMfa"    // (int)RouteType.UpdateMfa
         };
     }
     
@@ -134,6 +136,13 @@ public class VeloSdk
     {
         var client = new FlowClient(RouteType.Delete, _client);
         return new Flows.Delete.AskDelete(client);
+    }
+
+    /// <inheritdoc cref="Flows.UpdateMfa.HelloUpdateMfa"/>
+    public Flows.UpdateMfa.HelloUpdateMfa UpdateMfa()
+    {
+        var client = new FlowClient(RouteType.UpdateMfa, _client);
+        return new Flows.UpdateMfa.HelloUpdateMfa(client);
     }
     
     /// <summary>

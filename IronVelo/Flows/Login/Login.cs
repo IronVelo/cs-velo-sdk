@@ -46,21 +46,26 @@ public record HelloLogin
     /// </item></list>
     /// </returns>
     /// <exception cref="Exceptions.RequestError">
-    /// There was an unexpected error encountered when making the request, see <see cref="Exceptions.RequestErrorKind"/>
+    /// There was an unexpected error encountered when making the request, see 
+    /// <see cref="Exceptions.RequestErrorKind"/>
     /// for more information
     /// </exception> 
     public FutResult<InitMfa, LoginError> Start(string username, Password password)
     {
-        return FutResult<InitMfa, LoginError>.From(_client.SendRequest<HelloLoginTlArgs, HelloRes>(
-            new HelloLoginTlArgs(new HelloLoginArgs(username, password.ToString()))
-        ).ContinueWith(task => { 
-            var res = Resolve.Get(task);
-            return res
-                .UnwrapRet()
-                .ToResult()
-                .Map(val => new InitMfa(_client, res.Permit, val));
-            })
-        );
+        return FutResult<InitMfa, LoginError>
+            .From(
+                _client
+                    .SendRequest<HelloLoginTlArgs, HelloRes>(
+                        new HelloLoginTlArgs(new HelloLoginArgs(username, password.ToString()))
+                    )
+                    .ContinueWith(task => { 
+                        var res = Resolve.Get(task);
+                        return res
+                            .UnwrapRet()
+                            .ToResult()
+                            .Map(val => new InitMfa(_client, res.Permit, val));
+                    })
+            );
     }
     
     /// <summary>
@@ -70,14 +75,14 @@ public record HelloLogin
 }
 
 /// <summary>
-/// Resume the login flow from a <see cref="LoginState"/>, used in multistep flows to avoid the need for tracking state
-/// yourself. Initiated via <see cref="HelloLogin.Resume"/>.
+/// Resume the login flow from a <see cref="LoginState"/>, used in multistep flows to avoid the need 
+/// for tracking state yourself. Initiated via <see cref="HelloLogin.Resume"/>.
 /// </summary>
 /// <remarks>
 /// <b>How do I know which method to invoke?:</b><br/>
-/// In order to properly use <see cref="HelloLogin.Resume"/> you should have invoked <see cref="IState{TF}.Serialize"/>
-/// in order to provide the state to the client. When the client continues the flow, they should return this serialized
-/// representation of the state to your server.
+/// In order to properly use <see cref="HelloLogin.Resume"/> you should have invoked 
+/// <see cref="IState{TF}.Serialize"/> in order to provide the state to the client. When the client 
+/// continues the flow, they should return this serialized representation of the state to your server.
 /// <br/><br/>
 /// The serialized states all include a <c>State</c> property, which indicates which method to call.
 /// <br/><br/>
@@ -98,9 +103,9 @@ public record HelloLogin
 /// </list>
 /// <para>
 /// <b>Security:</b><br/>
-/// There are no security concerns here, but if you would like to catch errors / tampering early, you can sign the
-/// serialized representation using <c>HMAC</c>. To clarify, this is not necessary, the IdP will detect any tampering
-/// itself.
+/// There are no security concerns here, but if you would like to catch errors / tampering early, you 
+/// can sign the serialized representation using some message authentication code (MAC). To clarify, 
+/// this is not necessary, the IdP will detect any tampering itself.
 /// </para>
 /// </remarks>
 public record ResumeLoginState
@@ -164,13 +169,14 @@ internal class InitMfaTlArgs
 }
 
 /// <summary>
-/// Abstract record for initiating MFA, transitioning to verification states. This allows one to generically handle
-/// retry initialization and the first initialization of MFA.
+/// Abstract record for initiating MFA, transitioning to verification states. This allows one to 
+/// generically handle retry initialization and the first initialization of MFA.
 /// <br/><br/>
 /// Implemented by <see cref="InitMfa"/> and <see cref="RetryInitMfa"/>.
 /// </summary>
 /// <typeparam name="TF">
-/// The state implementing <c>MfaBase</c>. To generically reference this use <c>IState&lt;LoginState&gt;</c>/>.
+/// The state implementing <c>MfaBase</c>. To generically reference this use 
+/// <c>IState&lt;LoginState&gt;</c>/>.
 /// </typeparam>
 public abstract record MfaBase<TF> : IState<LoginState>
 {
@@ -208,7 +214,11 @@ public abstract record MfaBase<TF> : IState<LoginState>
     private static InitMfaTlArgs CreateInitMfaTlArgs(MfaKind mfaKind, string state) =>
         new(new InitMfaArgs(mfaKind), state);
     
-    private async Task<T> PerformActionUnchecked<T>(MfaKind mfaKind, Func<string?, T> createResponse, string state)
+    private async Task<T> PerformActionUnchecked<T>(
+        MfaKind mfaKind, 
+        Func<string?, T> createResponse, 
+        string state
+    )
     {
         var ret = await _client.SendRequest<InitMfaTlArgs, Infallible>(
             CreateInitMfaTlArgs(mfaKind, state),
@@ -221,8 +231,16 @@ public abstract record MfaBase<TF> : IState<LoginState>
     /// Used internally by <see cref="MfaAction{T}"/> for transitioning states
     /// </summary>
     protected FutResult<T, TE> PerformMfaAction<T, TE>(
-        MfaKind mfaKind, Func<string?, T> createResponse, string state, Func<TE> err
-    ) => FutResult<T, TE>.From(Guard(mfaKind, () => PerformActionUnchecked(mfaKind, createResponse, state), err));
+        MfaKind mfaKind, Func<string?, T> 
+        createResponse, 
+        string state, 
+        Func<TE> err
+    ) => FutResult<T, TE>.From(
+        Guard(
+            mfaKind, 
+            () => PerformActionUnchecked(mfaKind, createResponse, state), err
+        )
+    );
 
     /// <summary>
     /// Used internally for transitioning states
@@ -235,19 +253,19 @@ public abstract record MfaBase<TF> : IState<LoginState>
     /// <returns>
     /// <list type="bullet"><item>
     /// <description>
-    /// Success: SMS OTP has been set up as an MFA method for the user and the OTP text has been dispatched, the
-    /// verification state where the user must submit the received OTP is returned.
+    /// Success: SMS OTP has been set up as an MFA method for the user and the OTP text has been 
+    /// dispatched, the verification state where the user must submit the received OTP is returned.
     /// </description>
     /// </item><item>
     /// <description>
-    /// Failure: The user has not previously set up SMS OTP as an MFA method, the current state is returned allowing you
-    /// to try another MFA method.
+    /// Failure: The user has not previously set up SMS OTP as an MFA method, the current state 
+    /// is returned allowing you to try another MFA method.
     /// </description>
     /// </item></list>
     /// </returns>
     /// <exception cref="Exceptions.RequestError">
-    /// There was an unexpected error encountered when making the request, see <see cref="Exceptions.RequestErrorKind"/>
-    /// for more information
+    /// There was an unexpected error encountered when making the request, see 
+    /// <see cref="Exceptions.RequestErrorKind"/> for more information
     /// </exception> 
     public FutResult<VerifyMfa, TF> Sms() 
         => MfaAction(MfaKind.Sms, permit => new VerifyMfa(_client, permit, MfaKinds));
@@ -258,19 +276,19 @@ public abstract record MfaBase<TF> : IState<LoginState>
     /// <returns>
     /// <list type="bullet"><item>
     /// <description>
-    /// Success: Email OTP has been set up as an MFA method for the user and the OTP email has been dispatched, the
-    /// verification state where the user must submit the received OTP is returned.
+    /// Success: Email OTP has been set up as an MFA method for the user and the OTP email has been 
+    /// dispatched, the verification state where the user must submit the received OTP is returned.
     /// </description>
     /// </item><item>
     /// <description>
-    /// Failure: The user has not previously set up email OTP as an MFA method, the current state is returned allowing
-    /// you to try another MFA method.
+    /// Failure: The user has not previously set up email OTP as an MFA method, the current state is 
+    /// returned allowing you to try another MFA method.
     /// </description>
     /// </item></list>
     /// </returns>
     /// <exception cref="Exceptions.RequestError">
-    /// There was an unexpected error encountered when making the request, see <see cref="Exceptions.RequestErrorKind"/>
-    /// for more information
+    /// There was an unexpected error encountered when making the request, see 
+    /// <see cref="Exceptions.RequestErrorKind"/> for more information
     /// </exception>
     public FutResult<VerifyMfa, TF> Email() 
         => MfaAction(MfaKind.Email, permit => new VerifyMfa(_client, permit, MfaKinds));
@@ -281,19 +299,19 @@ public abstract record MfaBase<TF> : IState<LoginState>
     /// <returns>
     /// <list type="bullet"><item>
     /// <description>
-    /// Success: The user has set up TOTP (authenticator apps) as an MFA method, the verification state where the user
-    /// must submit the current code is returned.
+    /// Success: The user has set up TOTP (authenticator apps) as an MFA method, the verification 
+    /// state where the user must submit the current code is returned.
     /// </description>
     /// </item><item>
     /// <description>
-    /// Failure: The user has not previously set up TOTP (authenticator apps) as an MFA method, the current state is
-    /// returned allowing you to try another MFA method.
+    /// Failure: The user has not previously set up TOTP (authenticator apps) as an MFA method, the 
+    /// current state is returned allowing you to try another MFA method.
     /// </description>
     /// </item></list>
     /// </returns>
     /// <exception cref="Exceptions.RequestError">
-    /// There was an unexpected error encountered when making the request, see <see cref="Exceptions.RequestErrorKind"/>
-    /// for more information
+    /// There was an unexpected error encountered when making the request, see 
+    /// <see cref="Exceptions.RequestErrorKind"/> for more information
     /// </exception>
     public FutResult<VerifyTotp, TF> Totp()
         => MfaAction(MfaKind.Totp, permit => new VerifyTotp(_client, permit, MfaKinds));
@@ -304,7 +322,12 @@ public abstract record MfaBase<TF> : IState<LoginState>
 /// </summary>
 public record InitMfa : MfaBase<InitMfa>
 {
-    internal InitMfa(FlowClient client, string? permit, MfaKind[] mfaKinds) : base(client, permit, mfaKinds) { }
+    internal InitMfa(
+        FlowClient client, 
+        string? permit, 
+        MfaKind[] mfaKinds
+    ) : base(client, permit, mfaKinds) { }
+    
     private const string StateName = "init_mfa";
     
     /// <inheritdoc />
@@ -316,11 +339,16 @@ public record InitMfa : MfaBase<InitMfa>
 }
 
 /// <summary>
-/// State where the last MFA method verification failed, allowing for re-selecting the MFA method and retrying 
+/// State where the last MFA method verification failed, allowing for re-selecting the MFA method 
+/// and retrying 
 /// </summary>
 public record RetryInitMfa : MfaBase<RetryInitMfa>
 {
-    internal RetryInitMfa(FlowClient client, string? permit, MfaKind[] mfaKinds) : base(client, permit, mfaKinds) { }
+    internal RetryInitMfa(
+        FlowClient client, 
+        string? permit, 
+        MfaKind[] mfaKinds
+    ) : base(client, permit, mfaKinds) { }
     private const string StateName = "retry_init_mfa";
     
     /// <inheritdoc />
@@ -342,7 +370,8 @@ internal partial record OtpCheckRes(
 internal record VerifyMfaArgs([property: JsonProperty("guess")] string Guess);
 
 /// <summary>
-/// Abstract record for verifying the selected MFA method. This is an implementation detail and should be ignored.
+/// Abstract record for verifying the selected MFA method. This is an implementation detail and 
+/// should be ignored.
 /// </summary>
 public abstract record VerifyMfaBase : IState<LoginState>
 {
@@ -388,13 +417,17 @@ internal record VerifyMfaTlArgs([property: JsonProperty("check_simple_mfa")] Ver
 /// </summary>
 public record VerifyMfa : VerifyMfaBase
 {
-    internal VerifyMfa(FlowClient client, string? permit, MfaKind[] mfaKinds) : base(client, permit, mfaKinds) { }
+    internal VerifyMfa(
+        FlowClient client, 
+        string? permit, 
+        MfaKind[] mfaKinds
+    ) : base(client, permit, mfaKinds) { }
     /// <inheritdoc />
     public override LoginState GetState() => new(LoginStateE.VerifyOtp, Permit!, MfaKinds);
 
     /// <summary>
-    /// Verify the Email or SMS OTP dispatched in <see cref="InitMfa"/> or <see cref="RetryInitMfa"/> and finalize the
-    /// login process iif correct.
+    /// Verify the Email or SMS OTP dispatched in <see cref="InitMfa"/> or <see cref="RetryInitMfa"/> 
+    /// and finalize the login process if correct.
     /// </summary>
     /// <param name="guess">What the user believes the current OTP is</param>
     /// <returns>
@@ -404,14 +437,14 @@ public record VerifyMfa : VerifyMfaBase
     /// </description>
     /// </item><item>
     /// <description>
-    /// Failure: The guess was incorrect, the state transitions to <see cref="RetryInitMfa"/>, allowing them to
-    /// re-select an MFA method for this login and try again.
+    /// Failure: The guess was incorrect, the state transitions to <see cref="RetryInitMfa"/>, 
+    /// allowing them to re-select an MFA method for this login and try again.
     /// </description>
     /// </item></list>
     /// </returns>
     /// <exception cref="Exceptions.RequestError">
-    /// There was an unexpected error encountered when making the request, see <see cref="Exceptions.RequestErrorKind"/>
-    /// for more information
+    /// There was an unexpected error encountered when making the request, see 
+    /// <see cref="Exceptions.RequestErrorKind"/> for more information
     /// </exception> 
     public FutResult<Token, RetryInitMfa> Guess(SimpleOtp guess)
     {
@@ -427,7 +460,8 @@ public record VerifyMfa : VerifyMfaBase
 internal record VerifyTotpTlArgs([property: JsonProperty("check_totp")] VerifyMfaArgs Args);
 
 /// <summary>
-/// State for verifying the code from the user's authenticator app (TOTP). The main method being <see cref="Guess"/>.
+/// State for verifying the code from the user's authenticator app (TOTP). The main method being 
+/// <see cref="Guess"/>.
 /// </summary>
 public record VerifyTotp : VerifyMfaBase
 {
@@ -447,14 +481,14 @@ public record VerifyTotp : VerifyMfaBase
     /// </description>
     /// </item><item>
     /// <description>
-    /// Failure: The guess was incorrect, the state transitions to <see cref="RetryInitMfa"/>, allowing them to
-    /// re-select an MFA method for this login and try again.
+    /// Failure: The guess was incorrect, the state transitions to <see cref="RetryInitMfa"/>, 
+    /// allowing them to re-select an MFA method for this login and try again.
     /// </description>
     /// </item></list>
     /// </returns> 
     /// <exception cref="Exceptions.RequestError">
-    /// There was an unexpected error encountered when making the request, see <see cref="Exceptions.RequestErrorKind"/>
-    /// for more information
+    /// There was an unexpected error encountered when making the request, see 
+    /// <see cref="Exceptions.RequestErrorKind"/> for more information
     /// </exception>
     public FutResult<Token, RetryInitMfa> Guess(Totp guess)
     {

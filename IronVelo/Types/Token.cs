@@ -10,13 +10,14 @@ using Base64;
 /// Represents the login state for a user, should be validated on each request with
 /// <see cref="VeloSdk.CheckToken"/> unless being used in a flow.
 /// </summary>
+[JsonConverter(typeof(TokenDeserializer))]
 [Affine("On each successful operation outside of revocation tokens are rotated")]
 public class Token
 {
     internal Token(string encoded)
     {
-        // If a token is issued to a user it is not considered a secret, plus it is encrypted. No need for the constant
-        // time implementation here.
+        // If a token is issued to a user it is not considered a secret, plus it is encrypted. 
+        // No need for the constant time implementation here.
         _sealed = Base64.Decode(encoded);
     }
 
@@ -40,7 +41,8 @@ public class Token
     /// </summary>
     /// <param name="encoded">The encoded <see cref="Token"/></param>
     /// <returns>
-    /// A successful <see cref="Result{T,TE}"/> if the input was valid base64, otherwise a <see cref="Base64Error"/>.
+    /// A successful <see cref="Result{T,TE}"/> if the input was valid base64, otherwise 
+    /// a <see cref="Base64Error"/>.
     /// </returns>
     public static Result<Token, Base64Error> TryDecode(string encoded)
     {
@@ -59,13 +61,37 @@ public class Token
 
 internal class TokenDeserializer : JsonConverter<Token>
 {
+    public override Token ReadJson(
+        JsonReader reader, 
+        Type objectType, 
+        Token? existingValue, 
+        bool hasExistingValue, 
+        JsonSerializer serializer
+    )
+    {
+        if (reader.Value is string encoded)
+        {
+            return Token.TryDecode(encoded)
+                .MapOrElse(
+                    err => {
+                        throw new JsonSerializationException(
+                            $"Invalid token format: {err}"
+                        );
+                    },
+                    token => token
+                );
+        }
+        throw new JsonSerializationException("Expected string value for Token");
+    }
+
     public override void WriteJson(JsonWriter writer, Token? value, JsonSerializer serializer)
     {
-        if (value != null) { writer.WriteValue(value.Encode()); }
-    }
-    public override Token? ReadJson(JsonReader reader, Type objectType, Token? existingValue, bool hasExistingValue, JsonSerializer serializer)
-    {
-        return reader.Value is { } val ? new Token((string)val) : null;
+        if (value is null)
+        {
+            writer.WriteNull();
+            return;
+        }
+        writer.WriteValue(value.Encode());
     }
 }
 

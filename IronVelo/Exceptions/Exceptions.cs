@@ -46,22 +46,22 @@ public enum RequestErrorKind
     /// </summary>
     Deserialization,
     /// <summary>
-    /// A precondition was not satisfied and now the associated permit is no longer usable. The user must restart the
-    /// flow.
+    /// A precondition was not satisfied and now the associated permit is no longer usable. The 
+    /// user must restart the flow.
     /// </summary>
     /// <remarks>
     /// Common Causes:
     /// <list type="bullet"><item>
     /// <description>Permit Expiration: The user took too long to continue the flow</description>
     /// </item><item>
-    /// Permit Claims: A claim failed to satisfy a precondition, this could be the number of attempts being above the
-    /// limit
+    /// Permit Claims: A claim failed to satisfy a precondition, this could be the number of attempts 
+    /// being above the limit
     /// </item></list>
     /// </remarks>
     Precondition,
     /// <summary>
-    /// An unspecified error took place in the IdP. The associated permit may or may not be invalidated depending on the
-    /// depth of the error.
+    /// An unspecified error took place in the IdP. The associated permit may or may not be 
+    /// invalidated depending on the depth of the error.
     /// </summary>
     Internal,
     /// <summary>

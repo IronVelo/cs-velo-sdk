@@ -14,15 +14,15 @@ using Exceptions;
 public interface IState<out TF>
 {
     /// <summary>
-    /// Get the current state in a serializable form. Used in multistep flows to avoid the need for tracking state
-    /// yourself.
+    /// Get the current state in a serializable form. Used in multistep flows to avoid the need 
+    /// for tracking state yourself.
     /// </summary>
     /// <returns>The current state in a serializable form.</returns>
     public TF GetState();
     
     /// <summary>
-    /// Get a serialized representation of the current state. Used in multistep flows to avoid the need for tracking
-    /// state yourself.
+    /// Get a serialized representation of the current state. Used in multistep flows to avoid 
+    /// the need for tracking state yourself.
     /// </summary>
     /// <returns>The serialized representation of the current state.</returns>
     public string Serialize() => JsonConvert.SerializeObject(GetState());
@@ -74,9 +74,14 @@ public record FlowClient
     /// <typeparam name="TR">The expected return type of the state</typeparam>
     /// <returns>A response with the <c>TR></c> as the <c>Ret</c> field</returns>
     /// <exception cref="RequestError">
-    /// There was an error encountered when making the request, see <see cref="RequestErrorKind"/> for more information
+    /// There was an error encountered when making the request, see 
+    /// <see cref="RequestErrorKind"/> for more information
     /// </exception>
-    public async Task<Response<TR>> SendRequest<TA, TR>(TA args, string? permit = null, JsonConverter? jsonConverter = null)
+    public async Task<Response<TR>> SendRequest<TA, TR>(
+        TA args, 
+        string? permit = null, 
+        JsonConverter? jsonConverter = null
+    )
     {
         var req = new Request<TA>(args, permit).Serialize(jsonConverter);
         var response = await Client.MakeDefaultRequest(
@@ -106,15 +111,30 @@ public record FlowClient
             case HttpStatusCode.OK:
                 break;
             case HttpStatusCode.Unauthorized:
-                throw new RequestError(RequestErrorKind.State, "Attempted to transition to an unauthorized state");
+                throw new RequestError(
+                    RequestErrorKind.State, 
+                    "Attempted to transition to an unauthorized state"
+                );
             case HttpStatusCode.PreconditionFailed:
-                throw new RequestError(RequestErrorKind.Precondition, "Permit expired or arguments were illegal");
+                throw new RequestError(
+                    RequestErrorKind.Precondition, 
+                    "Permit expired or arguments were illegal"
+                );
             case HttpStatusCode.BadRequest:
-                throw new RequestError(RequestErrorKind.Request, "Malformed request");
+                throw new RequestError(
+                    RequestErrorKind.Request, 
+                    "Malformed request"
+                );
             case HttpStatusCode.InternalServerError:
-                throw new RequestError(RequestErrorKind.Internal, "Internal Server Error");
+                throw new RequestError(
+                    RequestErrorKind.Internal, 
+                    "Internal Server Error"
+                );
             default:
-                throw new RequestError(RequestErrorKind.General, $"Unexpected Status from Velo: ${statusCode}");
+                throw new RequestError(
+                    RequestErrorKind.General, 
+                    $"Unexpected Status from Velo: ${statusCode}"
+                );
         }
     }
 }
@@ -212,8 +232,9 @@ public enum LoginError
     /// </summary>
     IncorrectPassword,
     /// <summary>
-    /// The user had no MFA kinds setup. This is the standard login flow's equivalent of <see cref="WrongFlow"/>.
-    /// If you receive this error message, it means you should be using the MigrateLogin.
+    /// The user had no MFA kinds setup. This is the standard login flow's equivalent of
+    /// <see cref="WrongFlow"/>. If you receive this error message, it means you should be using 
+    /// the MigrateLogin.
     /// </summary>
     IllegalMfaKinds,
     /// <summary>
@@ -320,7 +341,12 @@ internal class SetupMfaArgsSerializer : JsonConverter
         }
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+    public override object ReadJson(
+        JsonReader reader, 
+        Type objectType, 
+        object? existingValue, 
+        JsonSerializer serializer
+    )
     {
         throw new NotImplementedException("Deserialization is not supported for SetupMfaKind.");
     }
@@ -336,7 +362,8 @@ internal record SetupFirstMfaTlArgs([property: JsonProperty("setup_first_mfa")] 
 internal record SetupTotpRes([property: JsonProperty("setup_totp")] string ProvisioningUri);
 
 /// <summary>
-/// Used for generically interacting with MFA initiation in <c>MigrateLogin</c> as well as <c>Signup</c> states.
+/// Used for generically interacting with MFA initiation in <c>MigrateLogin</c> as well as 
+/// <c>Signup</c> states.
 /// <br/>
 /// <para>
 /// <b>Implementors:</b>
@@ -362,7 +389,12 @@ internal record SetupTotpRes([property: JsonProperty("setup_totp")] string Provi
 /// <typeparam name="TF">The serializable representation of states in the current flow.</typeparam>
 public abstract record SetupMfaBase<TVt, TVs, TF> : IState<TF>
 {
-    internal SetupMfaBase(FlowClient client, string? permit, List<MfaKind>? ps = null, string stateIdent = "setup_first_mfa")
+    internal SetupMfaBase(
+        FlowClient client, 
+        string? permit, 
+        List<MfaKind>? ps = null, 
+        string stateIdent = "setup_first_mfa"
+    )
     {
         PrevSetup = ps ?? new List<MfaKind>();
         _client = client;
@@ -371,8 +403,8 @@ public abstract record SetupMfaBase<TVt, TVs, TF> : IState<TF>
     }
     
     /// <summary>
-    /// The identifier for the current state, used in making requests to the IdP. Implementation detail and should be
-    /// ignored.
+    /// The identifier for the current state, used in making requests to the IdP. Implementation detail 
+    /// and should be ignored.
     /// </summary>
     protected readonly string StateIdent;
     private readonly FlowClient _client;
@@ -420,8 +452,8 @@ public abstract record SetupMfaBase<TVt, TVs, TF> : IState<TF>
     /// Set up TOTP (for authenticator apps) as an available MFA method for the user
     /// </summary>
     /// <exception cref="Exceptions.RequestError">
-    /// There was an unexpected error encountered when making the request, see <see cref="Exceptions.RequestErrorKind"/>
-    /// for more information
+    /// There was an unexpected error encountered when making the request, see 
+    /// <see cref="Exceptions.RequestErrorKind"/> for more information
     /// </exception>
     public async Task<TVt> Totp()
     {
@@ -434,8 +466,8 @@ public abstract record SetupMfaBase<TVt, TVs, TF> : IState<TF>
     /// </summary>
     /// <param name="phoneNumber">The users phone number (callers responsibility to validate)</param>
     /// <exception cref="Exceptions.RequestError">
-    /// There was an unexpected error encountered when making the request, see <see cref="Exceptions.RequestErrorKind"/>
-    /// for more information
+    /// There was an unexpected error encountered when making the request, see 
+    /// <see cref="Exceptions.RequestErrorKind"/> for more information
     /// </exception>
     public async Task<TVs> Sms(string phoneNumber)
     {
@@ -448,8 +480,8 @@ public abstract record SetupMfaBase<TVt, TVs, TF> : IState<TF>
     /// </summary>
     /// <param name="emailAddress">The users email address</param>
     /// <exception cref="Exceptions.RequestError">
-    /// There was an unexpected error encountered when making the request, see <see cref="Exceptions.RequestErrorKind"/>
-    /// for more information
+    /// There was an unexpected error encountered when making the request, see 
+    /// <see cref="Exceptions.RequestErrorKind"/> for more information
     /// </exception>
     public async Task<TVs> Email(string emailAddress)
     {
@@ -466,16 +498,17 @@ internal record VerifyTotpSetupRes([property: JsonProperty("verify_totp")] bool 
 /// The base abstract record for <see cref="Flows.Signup.JustVerifyTotp"/> and
 /// <see cref="Flows.MigrateLogin.JustVerifyTotp"/>. Used internally by the base abstract record
 /// <see cref="VerifyTotpBase{TS,TIi,TI,TF}"/>, the only difference being that
-/// <see cref="VerifyTotpBase{TS,TIi,TI,TF}"/> requires the provisioning URI exist. This can be used to generically
-/// handle TOTP verification for the Signup and MigrateLogin flows.
+/// <see cref="VerifyTotpBase{TS,TIi,TI,TF}"/> requires the provisioning URI exist. This can be used to 
+/// generically handle TOTP verification for the Signup and MigrateLogin flows.
 /// </summary>
 /// <typeparam name="TS">The state to transition to if successful.</typeparam>
 /// <typeparam name="TI">The implementor of this state, returned to under failures.</typeparam>
-/// <typeparam name="TF">The serializable state for the current flow, e.g. <see cref="SignupState"/>.</typeparam>
+/// <typeparam name="TF">The serializable state for the current flow, e.g. 
+/// <see cref="SignupState"/>.</typeparam>
 public abstract record JustVerifyTotpBase<TS, TI, TF> : IState<TF>
     where TI : JustVerifyTotpBase<TS, TI, TF>
 {
-    internal JustVerifyTotpBase(FlowClient client, string? permit,  List<MfaKind> prevSetup)
+    internal JustVerifyTotpBase(FlowClient client, string? permit, List<MfaKind> prevSetup)
     {
         Client = client;
         Permit = permit;
@@ -506,15 +539,16 @@ public abstract record JustVerifyTotpBase<TS, TI, TF> : IState<TF>
     protected abstract TS OkTransition(string? permit);
     
     /// <summary>
-    /// Verify that TOTP is properly setup for the user by having them submit the code from their authenticator app
+    /// Verify that TOTP is properly setup for the user by having them submit the code from their 
+    /// authenticator app
     /// </summary>
     /// <param name="guess">What the user believes the current TOTP code is</param>
     /// <returns>
     /// <list type="bullet">
     /// <item>
     /// <description>
-    /// Success: The guess was correct and TOTP is now set as one of the users available MFA methods and they can either
-    /// finish the flow or set up another MFA method
+    /// Success: The guess was correct and TOTP is now set as one of the users available MFA 
+    /// methods and they can either finish the flow or set up another MFA method
     /// </description>
     /// </item>
     /// <item>
@@ -523,8 +557,8 @@ public abstract record JustVerifyTotpBase<TS, TI, TF> : IState<TF>
     /// </list>
     /// </returns>
     /// <exception cref="Exceptions.RequestError">
-    /// There was an unexpected error encountered when making the request, see <see cref="Exceptions.RequestErrorKind"/>
-    /// for more information
+    /// There was an unexpected error encountered when making the request, 
+    /// see <see cref="Exceptions.RequestErrorKind"/> for more information
     /// </exception> 
     public FutResult<TS, TI> Guess(Totp guess)
     {
@@ -543,13 +577,15 @@ public abstract record JustVerifyTotpBase<TS, TI, TF> : IState<TF>
 }
 
 /// <summary>
-/// Near equivalent to <see cref="JustVerifyTotpBase{TS,TI,TF}"/>, with the only exception being this includes the
-/// provisioning URI while <see cref="JustVerifyTotpBase{TS,TI,TF}"/> does not.
+/// Near equivalent to <see cref="JustVerifyTotpBase{TS,TI,TF}"/>, with the only exception being this 
+/// includes the provisioning URI while <see cref="JustVerifyTotpBase{TS,TI,TF}"/> does not.
 /// </summary>
 /// <typeparam name="TS">The state to transition to if successful.</typeparam>
 /// <typeparam name="TIi">The implementor of <see cref="JustVerifyTotpBase{TS,TI,TF}"/></typeparam>
 /// <typeparam name="TI">The implementor of this state, returned to under failures.</typeparam>
-/// <typeparam name="TF">The serializable state for the current flow, e.g. <see cref="SignupState"/>.</typeparam>
+/// <typeparam name="TF">
+/// The serializable state for the current flow, e.g. <see cref="SignupState"/>.
+/// </typeparam>
 public abstract record VerifyTotpBase<TS, TIi, TI, TF> : IState<TF>
     where TIi : JustVerifyTotpBase<TS, TIi, TF>
     where TI : VerifyTotpBase<TS, TIi, TI, TF>
@@ -561,8 +597,9 @@ public abstract record VerifyTotpBase<TS, TIi, TI, TF> : IState<TF>
     }
     
     /// <summary>
-    /// The provisioning URI for the user's authenticator app. One should display this in their UI as a QR code. It
-    /// should always be transmitted via a secure channel, but that is a given when interacting with this SDK.
+    /// The provisioning URI for the user's authenticator app. One should display this in their UI as 
+    /// a QR code. It should always be transmitted via a secure channel, but that is a given when 
+    /// interacting with this SDK.
     /// </summary>
     public string ProvisioningUri { get; }
     private TIi _inner;
@@ -581,17 +618,23 @@ public abstract record VerifyTotpBase<TS, TIi, TI, TF> : IState<TF>
 }
 
 internal record VerifyMfaSetupArgs([property: JsonProperty("guess")] string Guess);
-internal record VerifyMfaSetupTlArgs([property: JsonProperty("verify_simple_otp")] VerifyMfaSetupArgs Args);
+internal record VerifyMfaSetupTlArgs(
+    [property: JsonProperty("verify_simple_otp")] VerifyMfaSetupArgs Args
+);
 internal record VerifyMfaSetupRet([property: JsonProperty("maybe_retry_simple")] bool Retry);
 
 /// <summary>
 /// The base abstract record for <see cref="Flows.Signup.VerifyMfaSetup"/> and
-/// <see cref="Flows.MigrateLogin.VerifyMfaSetup"/>, allowing for reuse of logic between the Signup and MigrateLogin
-/// flows. The only relevant method to users being <see cref="Guess"/>.
+/// <see cref="Flows.MigrateLogin.VerifyMfaSetup"/>, allowing for reuse of logic between the Signup 
+/// and MigrateLogin flows. The only relevant method to users being <see cref="Guess"/>.
 /// </summary>
 /// <typeparam name="TS">The state to transition to when the guess is correct.</typeparam>
-/// <typeparam name="TI">The implementor of this state, transitioned back to under incorrect guesses for retrying.</typeparam>
-/// <typeparam name="TF">The serializable state for the current flow, e.g. <see cref="SignupState"/>.</typeparam>
+/// <typeparam name="TI">
+/// The implementor of this state, transitioned back to under incorrect guesses for retrying.
+/// </typeparam>
+/// <typeparam name="TF">
+/// The serializable state for the current flow, e.g. <see cref="SignupState"/>.
+/// </typeparam>
 public abstract record VerifyMfaBase<TS, TI, TF> : IState<TF>
     where TI : VerifyMfaBase<TS, TI, TF>
 {
@@ -648,15 +691,16 @@ public abstract record VerifyMfaBase<TS, TI, TF> : IState<TF>
     /// <returns>
     /// <list type="bullet"><item>
     /// <description>
-    /// Success: The OTP was correct and now the MFA method is set as one of the users available MFA methods
+    /// Success: The OTP was correct and now the MFA method is set as one of the users available 
+    /// MFA methods
     /// </description>
     /// </item><item>
     /// <description>Failure: The guess was incorrect, the user must try again</description>
     /// </item></list>
     /// </returns>
     /// <exception cref="Exceptions.RequestError">
-    /// There was an unexpected error encountered when making the request, see <see cref="Exceptions.RequestErrorKind"/>
-    /// for more information
+    /// There was an unexpected error encountered when making the request, see 
+    /// <see cref="Exceptions.RequestErrorKind"/> for more information
     /// </exception>
     public FutResult<TS, TI> Guess(SimpleOtp guess)
     {
@@ -673,18 +717,21 @@ public abstract record VerifyMfaBase<TS, TI, TF> : IState<TF>
     }
 }
 
-internal record NewMfaOrFinalizeTlArgs([property: JsonProperty("setup_mfa_or_issue_token")] SetupMfaArgs Args);
+internal record NewMfaOrFinalizeTlArgs(
+    [property: JsonProperty("setup_mfa_or_issue_token")] SetupMfaArgs Args
+);
 internal record FinalizeSignupRet([property: JsonProperty("issue_token")] string Token);
 
 /// <summary>
-/// The base abstract record for potentially terminal states in the Signup and MigrateLogin flows, implemented by
-/// <see cref="Flows.MigrateLogin.NewMfaOrLogin"/> and <see cref="Flows.Signup.NewMfaOrFinalize"/>. Useful for sharing
+/// The base abstract record for potentially terminal states in the Signup and MigrateLogin flows, 
+/// implemented by <see cref="Flows.MigrateLogin.NewMfaOrLogin"/> and 
+/// <see cref="Flows.Signup.NewMfaOrFinalize"/>. Useful for sharing
 /// logic between the signup and migrate login flows.
 /// <br/>
 /// <para>
 /// At this state the user can either <see cref="Finish"/> or set up a new MFA kind. This implements
-/// <see cref="SetupMfaBase{TVt,TVs,TF}"/> for initiating the setup of a new MFA kind, allowing one to reuse their
-/// existing logic in handling this.
+/// <see cref="SetupMfaBase{TVt,TVs,TF}"/> for initiating the setup of a new MFA kind, allowing one 
+/// to reuse their existing logic in handling this.
 /// </para>
 /// </summary>
 /// <typeparam name="TVt">The state to transition to under a success.</typeparam>
@@ -705,8 +752,8 @@ public abstract record NewMfaOrFinalizeBase<TVt, TVs, TF> : SetupMfaBase<TVt, TV
     /// A token associated with the user's account
     /// </returns>
     /// <exception cref="Exceptions.RequestError">
-    /// There was an unexpected error encountered when making the request, see <see cref="Exceptions.RequestErrorKind"/>
-    /// for more information
+    /// There was an unexpected error encountered when making the request, see 
+    /// <see cref="Exceptions.RequestErrorKind"/> for more information
     /// </exception>
     public async Task<Token> Finish()
     {
