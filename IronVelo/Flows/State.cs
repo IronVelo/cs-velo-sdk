@@ -230,3 +230,44 @@ public record UpdateMfaState(
     string Permit,
     MfaKind[] OldMfa
 );
+
+
+/// <summary>
+/// Denotes the state to transition to in <see cref="Ticket.ResumeTicketState"/>.
+/// </summary>
+public enum TicketStateE
+{
+    /// <summary>
+    /// On resume, invoke <see cref="Ticket.ResumeTicketState.VerifiedTicket"/>.
+    /// </summary>
+    VerifiedTicket,
+    
+    /// <summary>
+    /// On resume, invoke <see cref="Ticket.ResumeTicketState.ResetPassword"/>.
+    /// </summary>
+    ResetPassword,
+    
+    /// <summary>
+    /// On resume, invoke <see cref="Ticket.ResumeTicketState.SetupMfa"/>.
+    /// </summary>
+    SetupMfa,
+    
+    /// <summary>
+    /// On resume, invoke <see cref="Ticket.ResumeTicketState.CompleteRecovery"/>.
+    /// </summary>
+    CompleteRecovery
+}
+
+/// <summary>
+/// Serializable representation of a ticket state, enabling multistep flows without needing to 
+/// track state yourself.
+/// </summary>
+/// <param name="State">Indicates the state to <see cref="Ticket.HelloTicket.Resume"/> for 
+/// continuing the process.</param>
+/// <param name="Permit">Secure representation of the future state, used by the IdP and SDK.</param>
+/// <param name="OperationType">The type of operation the ticket is being used for.</param>
+public record TicketState(
+    TicketStateE State,
+    string Permit,
+    Ticket.TicketOperation? OperationType
+);
