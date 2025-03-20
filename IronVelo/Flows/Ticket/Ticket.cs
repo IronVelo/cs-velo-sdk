@@ -57,19 +57,9 @@ public enum TicketVerificationError
     InvalidTicket,
     
     /// <summary>
-    /// The ticket has expired.
-    /// </summary>
-    Expired,
-    
-    /// <summary>
-    /// The ticket has already been used.
-    /// </summary>
-    AlreadyUsed,
-    
-    /// <summary>
     /// The ticket does not grant permission for the requested operation.
     /// </summary>
-    InsufficientPermission
+    InvalidOp
 }
 
 // Issue Ticket Flow
@@ -77,7 +67,7 @@ public enum TicketVerificationError
 internal record IssueTicketArgs(
     [property: JsonProperty("token")] string Token,
     [property: JsonProperty("username")] string TargetUsername,
-    [property: JsonProperty("ticket_kind")] TicketKind Kind,
+    [property: JsonProperty("kind")] TicketKind Kind,
     [property: JsonProperty("reason")] string Reason
 );
 
@@ -85,7 +75,7 @@ internal record IssueTicketTlArgs([property: JsonProperty("issue_ticket")] Issue
 
 [Result]
 internal partial record IssueTicketRes(
-    [property: Ok, JsonProperty("issue_ticket", NullValueHandling = NullValueHandling.Ignore)]
+    [property: Ok, JsonProperty("issue", NullValueHandling = NullValueHandling.Ignore)]
     TicketIssuanceResult Success,
     [property: Error, JsonProperty("issue_error", NullValueHandling = NullValueHandling.Ignore)]
     string Error
@@ -115,21 +105,15 @@ public enum TicketIssuanceError
     /// The target username does not exist.
     /// </summary>
     UserNotFound,
-    
-    /// <summary>
-    /// The reason provided for issuing the ticket is insufficient.
-    /// </summary>
-    InsufficientReason
 }
 
 // Redeem Ticket Flow
 
 internal record RedeemTicketArgs(
-    [property: JsonProperty("ticket")] Types.Ticket Ticket,
-    [property: JsonProperty("operation")] TicketOperation Operation
+    [property: JsonProperty("op")] TicketOperation Operation
 );
 
-internal record RedeemTicketTlArgs([property: JsonProperty("redeem_ticket")] RedeemTicketArgs Args);
+internal record RedeemTicketTlArgs([property: JsonProperty("redeem")] RedeemTicketArgs Args);
 
 internal record ProceedArgs;
 internal record ProceedTlArgs([property: JsonProperty("proceed")] ProceedArgs Args);
@@ -138,7 +122,7 @@ internal record ProceedTlArgs([property: JsonProperty("proceed")] ProceedArgs Ar
 internal partial record RedeemTicketRes(
     [property: Ok, JsonProperty("verify_ticket", NullValueHandling = NullValueHandling.Ignore)]
     string Success,
-    [property: Error, JsonProperty("ticket_error", NullValueHandling = NullValueHandling.Ignore)]
+    [property: Error, JsonProperty("redeem_error", NullValueHandling = NullValueHandling.Ignore)]
     TicketVerificationError Error
 );
 
@@ -228,7 +212,9 @@ public class HelloTicket
         return FutResult<VerifiedTicket, TicketVerificationError>
             .From(_client.SendRequest<RedeemTicketTlArgs, RedeemTicketRes>(
                 new RedeemTicketTlArgs(
-                    new RedeemTicketArgs(ticket, operation))
+                    new RedeemTicketArgs(operation)),
+                // The ticket is our permit
+                ticket.Encode()
             ).ContinueWith(task => {
                 var res = Resolve.Get(task);
                 return res.UnwrapRet().ToResult().MapOrElse(
@@ -319,6 +305,30 @@ public record ResumeTicketState
     public CompleteRecovery CompleteRecovery(TicketState state) => new(
         _client,
         state.Permit,
+        state.OperationType
+    );
+    
+    /// <summary>
+    /// Resumes the ticket redemption flow from the TOTP verification state.
+    /// </summary>
+    /// <param name="state">The current state of the ticket flow.</param>
+    /// <returns>A new <see cref="JustVerifyTotp"/> instance to handle TOTP verification.</returns>
+    public JustVerifyTotp VerifyTotpSetup(TicketState state) => new(
+        _client,
+        state.Permit,
+        state.OperationType
+    );
+
+    /// <summary>
+    /// Resumes the ticket redemption flow from the MFA verification state for SMS/Email.
+    /// </summary>
+    /// <param name="state">The current state of the ticket flow.</param>
+    /// <param name="mfaKind">The type of MFA being verified (SMS or Email)</param>
+    /// <returns>A new <see cref="VerifyMfaSetup"/> instance to handle OTP verification.</returns>
+    public VerifyMfaSetup VerifyMfaSetup(TicketState state, MfaKind mfaKind) => new(
+        _client,
+        state.Permit,
+        mfaKind,
         state.OperationType
     );
 }

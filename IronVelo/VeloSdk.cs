@@ -16,6 +16,7 @@ internal enum RouteType
     Delete = 5,
     MigrateLogin = 6,
     UpdateMfa = 7,
+    Ticket = 8
 }
 
 internal record H2Client
@@ -27,14 +28,15 @@ internal record H2Client
         HttpConnection = httpClient ?? new HttpClient();
         Routes = new[]
         {
-            "https://" + host + ":" + port + "/signup",  // (int)RouteType.Signup
-            "https://" + host + ":" + port + "/login",   // (int)RouteType.Login
-            "https://" + host + ":" + port + "/refresh", // (int)RouteType.Refresh 
-            "https://" + host + ":" + port + "/revoke",  // (int)RouteType.Revoke
-            "https://" + host + ":" + port + "/health",  // (int)RouteType.Health
-            "https://" + host + ":" + port + "/delete",  // (int)RouteType.Delete
-            "https://" + host + ":" + port + "/mLogin",  // (int)RouteType.MigrateLogin
-            "https://" + host + ":" + port + "/upMfa"    // (int)RouteType.UpdateMfa
+            "https://" + host + ":" + port + "/signup",  // 0 <= (int)RouteType.Signup
+            "https://" + host + ":" + port + "/login",   // 1 <= (int)RouteType.Login
+            "https://" + host + ":" + port + "/refresh", // 2 <= (int)RouteType.Refresh 
+            "https://" + host + ":" + port + "/revoke",  // 3 <= (int)RouteType.Revoke
+            "https://" + host + ":" + port + "/health",  // 4 <= (int)RouteType.Health
+            "https://" + host + ":" + port + "/delete",  // 5 <= (int)RouteType.Delete
+            "https://" + host + ":" + port + "/mLogin",  // 6 <= (int)RouteType.MigrateLogin
+            "https://" + host + ":" + port + "/upMfa",   // 7 <= (int)RouteType.UpdateMfa
+            "https://" + host + ":" + port + "/ticket",  // 8 <= (int)RouteType.Ticket
         };
     }
     
@@ -143,6 +145,13 @@ public class VeloSdk
     {
         var client = new FlowClient(RouteType.UpdateMfa, _client);
         return new Flows.UpdateMfa.HelloUpdateMfa(client);
+    }
+    
+    /// <inheritdoc cref="Flows.Ticket.HelloTicket"/>
+    public Flows.Ticket.HelloTicket Ticket() 
+    {
+        var client = new FlowClient(RouteType.Ticket, _client);
+        return new Flows.Ticket.HelloTicket(client);
     }
     
     /// <summary>

@@ -11,10 +11,11 @@
         <RepositoryUrl>https://github.com/IronVelo/cs-velo-sdk.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <DefaultItemExcludes>$(DefaultItemExcludes);**/*~;**/#*#;**/.#*</DefaultItemExcludes>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+        <ProjectReference Include="..\IronVelo\IronVelo.csproj" />
     </ItemGroup>
     
     <ItemGroup>
