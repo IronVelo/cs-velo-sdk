@@ -19,7 +19,6 @@
     </ItemGroup>
     
     <ItemGroup>
-        <PackageReference Include="IronVelo" Version="0.1.0"/>
         <PackageReference Include="MustUse.Analyzer" Version="1.0.0"/>
     </ItemGroup>
 </Project>
