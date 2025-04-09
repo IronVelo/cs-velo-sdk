@@ -14,11 +14,9 @@
         <DefaultItemExcludes>$(DefaultItemExcludes);**/*~;**/#*#;**/.#*</DefaultItemExcludes>
     </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\IronVelo\IronVelo.csproj" />
-    </ItemGroup>
     
     <ItemGroup>
+        <PackageReference Include="IronVelo" Version="0.3.0-alpha.1"/>
         <PackageReference Include="MustUse.Analyzer" Version="1.0.0"/>
     </ItemGroup>
 </Project>
